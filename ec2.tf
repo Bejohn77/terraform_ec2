@@ -58,11 +58,11 @@ resource "aws_security_group" "my_security" {
 resource "aws_instance" "my_instance" {
   key_name        = aws_key_pair.deployer.key_name
   security_groups = [aws_security_group.my_security.name]
-  instance_type   = "t3.micro"
-  ami             = "ami-0cfde0ea8edd312d4" #ubuntu
+  instance_type   = var.ec2_instance_type
+  ami             = var.ami_id #ubuntu
 
   root_block_device {
-    volume_size = 15
+    volume_size = var.root_storage_size
     volume_type = "gp3"
   }
 
