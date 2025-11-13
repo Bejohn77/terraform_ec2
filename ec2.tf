@@ -56,9 +56,14 @@ resource "aws_security_group" "my_security" {
 #ec2 instance
 
 resource "aws_instance" "my_instance" {
+  for_each = tomap({
+    tws1="t3.micro"
+    tws2="t3.micro"
+  }
+  )
   key_name        = aws_key_pair.deployer.key_name
   security_groups = [aws_security_group.my_security.name]
-  instance_type   = var.ec2_instance_type
+  instance_type   = each.value
   ami             = var.ami_id #ubuntu
 
   root_block_device {
@@ -67,7 +72,7 @@ resource "aws_instance" "my_instance" {
   }
 
   tags = {
-    Name = "terraform"
+    Name = each.key
 
   }
 
