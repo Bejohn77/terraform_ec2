@@ -43,6 +43,7 @@ resource "aws_security_group" "my_security" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "flask open"
   }
+
   # outbound rules
   egress {
     from_port = 0
@@ -65,9 +66,10 @@ resource "aws_instance" "my_instance" {
   security_groups = [aws_security_group.my_security.name]
   instance_type   = each.value
   ami             = var.ami_id #ubuntu
+  user_data = file("linux.sh")
 
   root_block_device {
-    volume_size = var.root_storage_size
+    volume_size = var.evn == "production" ? 15 : var.root_default_storage_size
     volume_type = "gp3"
   }
 
